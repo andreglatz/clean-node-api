@@ -10,19 +10,8 @@ interface SutTypes {
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public isValid (_email: string): boolean {
+    public isValid (email: string): boolean {
       return false
-    }
-  }
-
-  return new EmailValidatorStub()
-}
-
-const makeEmailValidatoWithError = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public isValid (_email: string): boolean {
-      throw new Error()
     }
   }
 
@@ -128,9 +117,12 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 500 if EmailValidator throws', () => {
-    const emailValidatorStub = makeEmailValidatoWithError()
-    const sut = new SignUpController(emailValidatorStub)
-
+    const { sut, emailValidatorStub } = makeSut()
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(
+      () => {
+        throw new Error()
+      }
+    )
     const httpRequest = {
       body: {
         name: 'any_name',
