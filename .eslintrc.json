@@ -15,5 +15,7 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "rules": {}
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off"
+  }
 }
