@@ -6,6 +6,7 @@
   "author": "Andre Glatz <andreglatz@outlook.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^25.2.2",
     "@types/node": "^14.0.1",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
@@ -19,8 +20,13 @@
     "eslint-plugin-standard": "^4.0.1",
     "git-commit-msg-linter": "^2.4.2",
     "husky": "^4.2.5",
+    "jest": "^26.0.1",
     "lint-staged": "^10.2.4",
     "prettier": "^2.0.5",
+    "ts-jest": "^26.0.0",
     "typescript": "^3.9.2"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
