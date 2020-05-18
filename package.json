@@ -6,7 +6,7 @@
   "author": "Andre Glatz <andreglatz@outlook.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --watch",
     "test:staged": "jest --passWithNoTests"
   },
   "devDependencies": {
