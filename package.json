@@ -6,8 +6,8 @@
   "author": "Andre Glatz <andreglatz@outlook.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
-    "test:staged": "jest"
+    "test": "jest --passWithNoTests",
+    "test:staged": "jest --passWithNoTests"
   },
   "devDependencies": {
     "@types/jest": "^25.2.2",
