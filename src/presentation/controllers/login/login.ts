@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { badRequest, serverError, unathorized } from '../../helpers/http-helper'
+import { badRequest, serverError, unathorized, ok } from '../../helpers/http-helper'
 import { MissingParamError, InvalidParamError } from '../../errors'
 import { Controller, HttpRequest, HttpResponse, EmailValidator, Authentication } from './login-protocols'
 
@@ -34,7 +34,7 @@ export class LoginController implements Controller {
         return unathorized()
       }
 
-      return badRequest(new MissingParamError('null'))
+      return ok({ accessToken })
     } catch (error) {
       return serverError(error)
     }
