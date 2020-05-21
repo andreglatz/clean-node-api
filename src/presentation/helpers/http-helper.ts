@@ -2,7 +2,7 @@
 import { HttpResponse } from '../protocols/http'
 import { ServerError, UnathorizedError } from '../errors'
 
-export const badRequest = (error: Error): HttpResponse => ({
+export const badRequest = (error: Error | null): HttpResponse => ({
   statusCode: 400,
   body: error
 })
