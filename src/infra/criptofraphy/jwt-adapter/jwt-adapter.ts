@@ -9,7 +9,7 @@ export class JwtAdapter implements Encrypter {
   }
 
   encrypt (value: string): string {
-    jwt.sign({ id: value }, this.secret)
-    return ''
+    const accessToken = jwt.sign({ id: value }, this.secret)
+    return accessToken
   }
 }
