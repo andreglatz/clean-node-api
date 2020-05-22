@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HttpResponse } from '../protocols/http'
-import { ServerError, UnathorizedError } from '../errors'
+import { HttpResponse } from '../../protocols/http'
+import { ServerError, UnathorizedError } from '../../errors'
 
 export const badRequest = (error: Error | null): HttpResponse => ({
   statusCode: 400,

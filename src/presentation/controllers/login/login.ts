@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { badRequest, serverError, unathorized, ok } from '../../helpers/http-helper'
+import { badRequest, serverError, unathorized, ok } from '../../helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse, Authentication, Validation } from './login-protocols'
 
 export class LoginController implements Controller {
