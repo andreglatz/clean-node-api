@@ -1,13 +1,10 @@
+/* eslint-disable no-useless-constructor */
 import { Hasher } from '../../../data/protocols/criptofraphy/hasher'
 import bcrypt from 'bcrypt'
 import { HashComparer } from '../../../data/protocols/criptofraphy/hash-comparer'
 
 export class BcryptAdapter implements Hasher, HashComparer {
-  private readonly salt: number
-
-  constructor (salt: number) {
-    this.salt = salt
-  }
+  constructor (private readonly salt: number) {}
 
   async hash (value: string): Promise<string> {
     const hash = await bcrypt.hash(value, this.salt)
