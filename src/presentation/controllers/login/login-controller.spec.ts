@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LoginController } from './login'
+import { LoginController } from './login-controller'
 import { badRequest, serverError, unathorized, ok } from '../../helpers/http/http-helper'
 import { MissingParamError } from '../../errors'
-import { Authentication, HttpRequest } from './login-protocols'
-import { Validation } from '../signup/signup-protocols'
+import { Authentication, HttpRequest } from './login-controller-protocols'
+import { Validation } from '../signup/signup-controller-protocols'
 import { AuthenticationModel } from '../../../domain/usercases/authentication'
 
 const makeValidation = (): Validation => {
