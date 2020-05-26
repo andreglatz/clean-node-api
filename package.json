@@ -4,6 +4,9 @@
   "repository": "git@github.com:AndreGlatz/clean-node-api.git",
   "author": "Andre Glatz <andreglatz@outlook.com>",
   "license": "MIT",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "start": "node dist/main/server.js",
     "build": "rimraf dist && tsc",
