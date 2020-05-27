@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-useless-constructor */
-import { Validation } from '../../protocols/validation'
-import { MissingParamError } from '../../errors'
+import { Validation } from '../../presentation/protocols/validation'
+import { MissingParamError } from '../../presentation/errors'
 
 export class RequiredFieldValidation implements Validation {
   constructor (private readonly fieldName: string) {}
