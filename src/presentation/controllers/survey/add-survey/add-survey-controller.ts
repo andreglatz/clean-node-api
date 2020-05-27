@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-constructor */
 import { Controller, HttpRequest, HttpResponse, Validation } from './add-survey-controller-protocols'
-import { badRequest, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, serverError, noContent } from '../../../helpers/http/http-helper'
 import { AddSurvey } from '../../../../domain/usercases/add-survey'
 
 export class AddSurveyController implements Controller {
@@ -22,7 +22,7 @@ export class AddSurveyController implements Controller {
         answers
       })
 
-      return null
+      return noContent()
     } catch (error) {
       return serverError(error)
     }
