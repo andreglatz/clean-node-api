@@ -13,7 +13,7 @@ services:
     restart: always
     command: bash -c "yarn --production && yarn debug"
     volumes:
-      - ./dist:/usr/workspace/clean-node-api/dist
+      - ./dist/:/usr/workspace/clean-node-api/dist/
       - ./package.json:/usr/workspace/clean-node-api/package.json
     ports: 
       - "3333:3333"
