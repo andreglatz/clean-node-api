@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpResponse } from '../../protocols/http'
 import { ServerError, UnathorizedError } from '../../errors'
 
 export const badRequest = (error: Error | null): HttpResponse => ({
   statusCode: 400,
+  body: error
+})
+
+export const forbidden = (error: Error | null): HttpResponse => ({
+  statusCode: 403,
   body: error
 })
 
