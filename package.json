@@ -19,7 +19,8 @@
     "test:unit": "yarn test --watch -c jest-unit-config.js",
     "test:integration": "yarn test --watch -c jest-integration-config.js",
     "test:staged": "yarn test --findRelatedTests",
-    "test:ci": "yarn test --coverage"
+    "test:ci": "yarn test --coverage",
+    "test:coveralls": "yarn test:ci && coveralls < converage/lcov.info"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.1.5",
@@ -33,6 +34,7 @@
     "@types/validator": "^13.0.0",
     "@typescript-eslint/eslint-plugin": "^3.0.1",
     "@typescript-eslint/parser": "^3.0.1",
+    "coveralls": "^3.1.0",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
