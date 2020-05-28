@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { MongoClient, Collection } from 'mongodb'
 
 export const MongoHelper = {
