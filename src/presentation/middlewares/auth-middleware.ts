@@ -1,8 +1,7 @@
 /* eslint-disable no-useless-constructor */
-import { HttpResponse, HttpRequest, Middleware } from '../protocols'
+import { HttpResponse, HttpRequest, Middleware, LoadAccountByToken } from './auth-middleware-protocols'
 import { forbidden, ok, serverError } from '../helpers/http/http-helper'
 import { AccessDeniedError } from '../errors'
-import { LoadAccountByToken } from '../../domain/usercases/load-account-by-token'
 
 export class AuthMiddleware implements Middleware {
   constructor (
