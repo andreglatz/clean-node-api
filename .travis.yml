@@ -4,5 +4,5 @@ node_js:
 install:
   - yarn install
 script:
-  - eslit 'src/**'
+  - yarn eslit 'src/**'
   - yarn test:coveralls
