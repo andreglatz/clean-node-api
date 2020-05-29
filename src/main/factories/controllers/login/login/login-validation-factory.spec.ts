@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { EmailValidation, ValidationComposite, RequiredFieldValidation } from '../../../../../validation/validators'
 import { makeLoginValidation } from './login-validation-factory'
-import { Validation } from '../../../../../presentation/protocols/validation'
-import { EmailValidator } from '../../../../../validation/protocols/email-validator'
+import { EmailValidation, ValidationComposite, RequiredFieldValidation } from '@/validation/validators'
+import { EmailValidator } from '@/validation/protocols/email-validator'
+import { Validation } from '@/presentation/protocols/validation'
 
 jest.mock('../../../../../validation/validators/validation-composite')
 

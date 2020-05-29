@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-useless-constructor */
 import { Controller, HttpRequest, HttpResponse, LoadSurveys } from './load-surveys-controller-protocols'
-import { ok, serverError, noContent } from '../../../helpers/http/http-helper'
+import { ok, serverError, noContent } from '@/presentation/helpers/http/http-helper'
 
 export class LoadSurveysController implements Controller {
   constructor (

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Decrypter } from '../../protocols/criptofraphy/decrypter'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
-import { AccountModel } from '../../../domain/models/account'
-import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-account-by-token-repository'
+import { Decrypter } from '@/data/protocols/criptofraphy/decrypter'
+import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
+import { AccountModel } from '@/domain/models/account'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',

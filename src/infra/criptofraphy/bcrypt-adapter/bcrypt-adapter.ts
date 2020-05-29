@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-constructor */
-import { Hasher } from '../../../data/protocols/criptofraphy/hasher'
+import { Hasher } from '@/data/protocols/criptofraphy/hasher'
 import bcrypt from 'bcrypt'
-import { HashComparer } from '../../../data/protocols/criptofraphy/hash-comparer'
+import { HashComparer } from '@/data/protocols/criptofraphy/hash-comparer'
 
 export class BcryptAdapter implements Hasher, HashComparer {
   constructor (private readonly salt: number) {}

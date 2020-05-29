@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SignUpController } from './signup-controller'
-import { MissingParamError, ServerError, EmailInUseError } from '../../../errors'
 import { AccountModel, AddAccount, AddAccountModel, Validation, Authentication, AuthenticationModel } from './signup-controller-protocols'
-import { HttpRequest } from '../../../protocols'
-import { ok, badRequest, serverError, forbidden } from '../../../helpers/http/http-helper'
+import { MissingParamError, ServerError, EmailInUseError } from '@/presentation/errors'
+import { HttpRequest } from '@/presentation/protocols'
+import { ok, badRequest, serverError, forbidden } from '@/presentation/helpers/http/http-helper'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

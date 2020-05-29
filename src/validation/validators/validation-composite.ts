@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-useless-constructor */
-import { Validation } from '../../presentation/protocols'
+import { Validation } from '@/presentation/protocols'
 
 export class ValidationComposite implements Validation {
   constructor (private readonly validations: Validation[]) {}
