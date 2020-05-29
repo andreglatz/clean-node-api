@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-useless-constructor */
-import { Validation } from '../../presentation/protocols/validation'
-import { InvalidParamError } from '../../presentation/errors'
+import { Validation } from '@/presentation/protocols/validation'
+import { InvalidParamError } from '@/presentation/errors'
 
 export class CompareFieldsValidation implements Validation {
   constructor (

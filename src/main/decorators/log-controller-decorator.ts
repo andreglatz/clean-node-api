@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-constructor */
-import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
-import { LogErrorRepository } from '../../data/protocols/db/log/log-error-repository'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository'
 
 export class LogControllerDecorator implements Controller {
   constructor (

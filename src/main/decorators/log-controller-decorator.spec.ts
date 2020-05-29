@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LogControllerDecorator } from './log-controller-decorator'
-import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
-import { serverError, ok } from '../../presentation/helpers/http/http-helper'
-import { LogErrorRepository } from '../../data/protocols/db/log/log-error-repository'
-import { AccountModel } from '../../domain/models/account'
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { serverError, ok } from '@/presentation/helpers/http/http-helper'
+import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository'
+import { AccountModel } from '@/domain/models/account'
 
 const makeFakeServerError = (): HttpResponse => {
   const fakeError = new Error()

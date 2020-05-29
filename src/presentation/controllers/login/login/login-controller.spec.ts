@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoginController } from './login-controller'
-import { badRequest, serverError, unathorized, ok } from '../../../helpers/http/http-helper'
-import { MissingParamError } from '../../../errors'
 import { Authentication, HttpRequest } from './login-controller-protocols'
-import { Validation } from '../signup/signup-controller-protocols'
-import { AuthenticationModel } from '../../../../domain/usercases/authentication'
+import { Validation } from '@/presentation/controllers/login/signup/signup-controller-protocols'
+import { MissingParamError } from '@/presentation/errors'
+import { badRequest, serverError, unathorized, ok } from '@/presentation/helpers/http/http-helper'
+import { AuthenticationModel } from '@/domain/usercases/authentication'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {

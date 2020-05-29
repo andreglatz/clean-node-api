@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-constructor */
 import jwt from 'jsonwebtoken'
-import { Encrypter } from '../../../data/protocols/criptofraphy/encrypter'
-import { Decrypter } from '../../../data/protocols/criptofraphy/decrypter'
+import { Encrypter } from '@/data/protocols/criptofraphy/encrypter'
+import { Decrypter } from '@/data/protocols/criptofraphy/decrypter'
 
 export class JwtAdapter implements Encrypter, Decrypter {
   constructor (private readonly secret: string) {}

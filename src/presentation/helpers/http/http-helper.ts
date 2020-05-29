@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HttpResponse } from '../../protocols/http'
-import { ServerError, UnathorizedError } from '../../errors'
+import { HttpResponse } from '@/presentation/protocols/http'
+import { ServerError, UnathorizedError } from '@/presentation/errors'
 
 export const badRequest = (error: Error | null): HttpResponse => ({
   statusCode: 400,
