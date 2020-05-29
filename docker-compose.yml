@@ -11,6 +11,8 @@ services:
     image: node:12
     working_dir: /usr/workspace/clean-node-api
     restart: always
+    environment: 
+      - MONGO_URL=mongodb://mongo:27017/clean-node-api
     command: bash -c "yarn --production && yarn debug"
     volumes:
       - ./dist/:/usr/workspace/clean-node-api/dist/
