@@ -1,7 +1,5 @@
 /* eslint-disable no-useless-constructor */
-import { LoadSurveys } from '@/domain/usercases/load-surveys'
-import { SurveyModel } from '@/domain/models/survey'
-import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-repository'
+import { LoadSurveys, SurveyModel, LoadSurveysRepository } from './db-load-surveys-protocols'
 
 export class DbLoadSurveys implements LoadSurveys {
   constructor (

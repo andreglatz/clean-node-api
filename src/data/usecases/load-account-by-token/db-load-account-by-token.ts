@@ -1,8 +1,5 @@
 /* eslint-disable no-useless-constructor */
-import { LoadAccountByToken } from '@/domain/usercases/load-account-by-token'
-import { AccountModel } from '@/domain/models/account'
-import { Decrypter } from '@/data/protocols/criptofraphy/decrypter'
-import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
+import { LoadAccountByToken, AccountModel, Decrypter, LoadAccountByTokenRepository } from './db-load-account-by-token-protocols'
 
 export class DbLoadAccountByToken implements LoadAccountByToken {
   constructor (
