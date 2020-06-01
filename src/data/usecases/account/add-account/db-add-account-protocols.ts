@@ -1,4 +1,4 @@
-export * from '@/domain/usercases/add-account'
+export * from '@/domain/usercases/account/add-account'
 export * from '@/domain/models/account'
 export * from '@/data/protocols/criptofraphy/hasher'
 export * from '@/data/protocols/db/account/add-account-repository'
