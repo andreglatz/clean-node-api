@@ -78,5 +78,27 @@ describe('Account Mongo Repository', () => {
       expect(surveyResult.id).toBeTruthy()
       expect(surveyResult.answer).toBe(survey.answers[0].answer)
     })
+
+    test('Should update an survey result if its not new', async () => {
+      const survey = await makeSurvey()
+      const account = await makeAccount()
+      const sut = makeSut()
+
+      const surveyData = {
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[0].answer,
+        date: new Date()
+      }
+
+      const surveyResultInsert = await surveyResultCollection.insertOne(surveyData)
+
+      surveyData.answer = survey.answers[1].answer
+      const surveyResultUpdate = await sut.save(surveyData)
+
+      expect(surveyResultUpdate).toBeTruthy()
+      expect(surveyResultUpdate.id).toEqual(surveyResultInsert.ops[0]._id)
+      expect(surveyResultUpdate.answer).toBe(survey.answers[1].answer)
+    })
   })
 })
