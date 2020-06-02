@@ -8,11 +8,11 @@ let surveyCollection: Collection
 let surveyResultCollection: Collection
 let accountCollection: Collection
 
-const makeSut = (): SurveyResultMongoRepository => {
+const mockSut = (): SurveyResultMongoRepository => {
   return new SurveyResultMongoRepository()
 }
 
-const makeSurvey = async (): Promise<SurveyModel> => {
+const mockSurvey = async (): Promise<SurveyModel> => {
   const survey = await surveyCollection.insertOne({
     question: 'any_question',
     answers: [
@@ -30,7 +30,7 @@ const makeSurvey = async (): Promise<SurveyModel> => {
   return survey.ops[0]
 }
 
-const makeAccount = async (): Promise<AccountModel> => {
+const mockAccount = async (): Promise<AccountModel> => {
   const account = await surveyCollection.insertOne({
     name: 'any_name',
     email: 'any_email@mail.com',
@@ -62,9 +62,9 @@ describe('Account Mongo Repository', () => {
 
   describe('save()', () => {
     test('Should add an survey result if its new', async () => {
-      const survey = await makeSurvey()
-      const account = await makeAccount()
-      const sut = makeSut()
+      const survey = await mockSurvey()
+      const account = await mockAccount()
+      const sut = mockSut()
 
       const surveyData = {
         surveyId: survey.id,
@@ -80,9 +80,9 @@ describe('Account Mongo Repository', () => {
     })
 
     test('Should update an survey result if its not new', async () => {
-      const survey = await makeSurvey()
-      const account = await makeAccount()
-      const sut = makeSut()
+      const survey = await mockSurvey()
+      const account = await mockAccount()
+      const sut = mockSut()
 
       const surveyData = {
         surveyId: survey.id,

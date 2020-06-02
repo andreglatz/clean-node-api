@@ -9,7 +9,7 @@ import { AddSurveyParams } from '../../domain/usercases/survey/add-survey'
 let surveyCollection: Collection
 let accountCollection: Collection
 
-const makeAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (): Promise<string> => {
   const accountFake = {
     name: 'André',
     email: 'andre.glatz@gmail.com',
@@ -24,7 +24,7 @@ const makeAccessToken = async (): Promise<string> => {
   return accessToken
 }
 
-const makeSurveyRequest = (): AddSurveyParams => ({
+const mockSurveyRequest = (): AddSurveyParams => ({
   question: 'Question',
   answers: [
     {
@@ -57,7 +57,7 @@ describe('Login Routes', () => {
 
   describe('POST /surveys', () => {
     test('Should return 403 on add survey without accessToken', async () => {
-      const surveyRequest = makeSurveyRequest()
+      const surveyRequest = mockSurveyRequest()
 
       await request(app)
         .post('/api/surveys')
@@ -66,8 +66,8 @@ describe('Login Routes', () => {
     })
 
     test('Should return 204 on add survey with valid accessToken', async () => {
-      const accessToken = await makeAccessToken()
-      const surveyRequest = makeSurveyRequest()
+      const accessToken = await mockAccessToken()
+      const surveyRequest = mockSurveyRequest()
 
       await request(app)
         .post('/api/surveys')
@@ -85,7 +85,7 @@ describe('Login Routes', () => {
     })
 
     test('Should return 204 on load surveys with valid accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)

@@ -9,7 +9,7 @@ import { AddSurveyParams } from '@/domain/usercases/survey/add-survey'
 let accountCollection: Collection
 let surveyCollection: Collection
 
-const makeAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (): Promise<string> => {
   const accountFake = {
     name: 'André',
     email: 'andre.glatz@gmail.com',
@@ -23,7 +23,7 @@ const makeAccessToken = async (): Promise<string> => {
   return accessToken
 }
 
-const makeInsertSurvey = async (): Promise<string> => {
+const mockInsertSurvey = async (): Promise<string> => {
   const surveyFake: AddSurveyParams = {
     question: 'Question',
     answers: [
@@ -71,8 +71,8 @@ describe('Login Routes', () => {
     })
 
     test('Should return 200 on save survey with valid accessToken', async () => {
-      const accessToken = await makeAccessToken()
-      const surveyId = await makeInsertSurvey()
+      const accessToken = await mockAccessToken()
+      const surveyId = await mockInsertSurvey()
 
       await request(app)
         .put(`/api/surveys/${surveyId}/results`)
