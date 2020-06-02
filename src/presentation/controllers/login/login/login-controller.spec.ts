@@ -4,7 +4,7 @@ import { Authentication, HttpRequest } from './login-controller-protocols'
 import { Validation } from '@/presentation/controllers/login/signup/signup-controller-protocols'
 import { MissingParamError } from '@/presentation/errors'
 import { badRequest, serverError, unathorized, ok } from '@/presentation/helpers/http/http-helper'
-import { AuthenticationModel } from '@/domain/usercases/account/authentication'
+import { AuthenticationParams } from '@/domain/usercases/account/authentication'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -25,7 +25,7 @@ const makeFakeRequest = (): HttpRequest => ({
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return new Promise(resolve => resolve('any_token'))
     }
   }

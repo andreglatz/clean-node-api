@@ -4,7 +4,7 @@ import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 import env from '../config/env'
-import { AddSurveyModel } from '../../domain/usercases/survey/add-survey'
+import { AddSurveyParams } from '../../domain/usercases/survey/add-survey'
 
 let surveyCollection: Collection
 let accountCollection: Collection
@@ -24,7 +24,7 @@ const makeAccessToken = async (): Promise<string> => {
   return accessToken
 }
 
-const makeSurveyRequest = (): AddSurveyModel => ({
+const makeSurveyRequest = (): AddSurveyParams => ({
   question: 'Question',
   answers: [
     {
