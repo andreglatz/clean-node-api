@@ -1,6 +1,6 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import { SurveyModel } from '@/domain/models/survey'
 import { AccountModel } from '@/domain/models/account'
 
@@ -27,7 +27,7 @@ const mockSurvey = async (): Promise<SurveyModel> => {
     date: new Date()
   })
 
-  return survey.ops[0]
+  return MongoHelper.map(survey.ops[0])
 }
 
 const mockAccount = async (): Promise<AccountModel> => {
@@ -37,7 +37,7 @@ const mockAccount = async (): Promise<AccountModel> => {
     password: 'any_password'
   })
 
-  return account.ops[0]
+  return MongoHelper.map(account.ops[0])
 }
 
 describe('Account Mongo Repository', () => {
@@ -66,17 +66,18 @@ describe('Account Mongo Repository', () => {
       const account = await mockAccount()
       const sut = mockSut()
 
-      const surveyData = {
+      const surveyResult = await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[0].answer,
         date: new Date()
-      }
+      })
 
-      const surveyResult = await sut.save(surveyData)
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.surveyId).toEqual(survey.id)
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
 
     test('Should update an survey result if its not new', async () => {
@@ -84,21 +85,25 @@ describe('Account Mongo Repository', () => {
       const account = await mockAccount()
       const sut = mockSut()
 
-      const surveyData = {
-        surveyId: survey.id,
-        accountId: account.id,
+      await surveyResultCollection.insertOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(account.id),
         answer: survey.answers[0].answer,
         date: new Date()
-      }
+      })
 
-      const surveyResultInsert = await surveyResultCollection.insertOne(surveyData)
+      const surveyResult = await sut.save({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: survey.answers[1].answer,
+        date: new Date()
+      })
 
-      surveyData.answer = survey.answers[1].answer
-      const surveyResultUpdate = await sut.save(surveyData)
-
-      expect(surveyResultUpdate).toBeTruthy()
-      expect(surveyResultUpdate.id).toEqual(surveyResultInsert.ops[0]._id)
-      expect(surveyResultUpdate.answer).toBe(survey.answers[1].answer)
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult.surveyId).toEqual(survey.id)
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[1].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
   })
 })
