@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-constructor */
 import { LoadSurveyResult, serverError, InvalidParamError, forbidden, Controller, HttpRequest, HttpResponse, LoadSurveyById } from './load-survey-result-controller-protocols'
+import { ok } from '@/presentation/helpers/http/http-helper'
 
 export class LoadSurveyResultController implements Controller {
   constructor (
@@ -15,9 +16,9 @@ export class LoadSurveyResultController implements Controller {
         return forbidden(new InvalidParamError('surveyId'))
       }
 
-      await this.loadSurveyResult.load(surveyId)
+      const surveyResult = await this.loadSurveyResult.load(surveyId)
 
-      return null
+      return ok(surveyResult)
     } catch (error) {
       return serverError(error)
     }
