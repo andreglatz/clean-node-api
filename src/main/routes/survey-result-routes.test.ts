@@ -88,5 +88,15 @@ describe('Login Routes', () => {
         .get('/api/surveys/any_id/results')
         .expect(403)
     })
+
+    test('Should return 200 on load survey with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
+      const surveyId = await mockInsertSurvey()
+
+      await request(app)
+        .get(`/api/surveys/${surveyId}/results`)
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
   })
 })
