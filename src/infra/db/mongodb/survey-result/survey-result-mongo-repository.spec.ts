@@ -34,7 +34,7 @@ const mockSurvey = async (): Promise<SurveyModel> => {
 }
 
 const mockAccount = async (): Promise<AccountModel> => {
-  const account = await surveyCollection.insertOne({
+  const account = await accountCollection.insertOne({
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'any_password'

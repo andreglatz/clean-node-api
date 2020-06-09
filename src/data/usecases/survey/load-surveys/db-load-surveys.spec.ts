@@ -32,20 +32,20 @@ describe('DbLoadSurveys', () => {
   test('Should call LoadSurveysRepository', async () => {
     const { sut, loadSurveysRepositoryStub } = mockSut()
     const loadAllSpy = jest.spyOn(loadSurveysRepositoryStub, 'loadAll')
-    await sut.load()
-    expect(loadAllSpy).toHaveBeenCalled()
+    await sut.load('any_id')
+    expect(loadAllSpy).toHaveBeenCalledWith('any_id')
   })
 
   test('Should returns a list of surveys on sucess', async () => {
     const { sut } = mockSut()
-    const surveys = await sut.load()
+    const surveys = await sut.load('any_id')
     expect(surveys).toEqual(mockSurveyModels())
   })
 
   test('Should throw if LoadSurveysRepository throws', async () => {
     const { sut, loadSurveysRepositoryStub } = mockSut()
     jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockImplementationOnce(throwError)
-    const promise = sut.load()
+    const promise = sut.load('any_id')
     await expect(promise).rejects.toThrow()
   })
 })
