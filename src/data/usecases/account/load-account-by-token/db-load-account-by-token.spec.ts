@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 import { Decrypter, LoadAccountByTokenRepository } from './db-load-account-by-token-protocols'
-import { mockAccountModel } from '@/domain/test'
+import { mockAccountModel, throwError } from '@/domain/test'
 import { mockDecrypter, mockLoadAccountByTokenRepository } from '@/data/test'
 
 type SutTypes = {
@@ -57,13 +57,11 @@ describe('DbLoadAccountByToken Usecase', () => {
     expect(account).toEqual(mockAccountModel())
   })
 
-  test('Should throw if Decrypter throws', async () => {
+  test('Should return null if Decrypter throws', async () => {
     const { sut, decypterStub } = mockSut()
-
-    jest.spyOn(decypterStub, 'decrypt').mockReturnValueOnce(Promise.reject(new Error()))
-
-    const promise = sut.load('any_token', 'any_role')
-    await expect(promise).rejects.toThrow()
+    jest.spyOn(decypterStub, 'decrypt').mockImplementation(throwError)
+    const account = await sut.load('any_token', 'any_role')
+    expect(account).toBeNull()
   })
 
   test('Should throw if LoadAccountByTokenRepository throws', async () => {
