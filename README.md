@@ -8,7 +8,7 @@
 O objetivo desse projeto é colocar em prática uma API com uma arquitetura bem definida e desacoplada, utilizando TDD (programação orientada a testes) como metodologia de trabalho, Clean Architecture para fazer a distribuição de responsabilidades em camadas, sempre seguindo os princípios do SOLID e, sempre que possível, aplicando Design Patterns para resolver alguns problemas comuns.
 
 
-> ## APIs construídas no treinamento
+> ## APIs construídas
 
 1. Cadastro
 2. Login
