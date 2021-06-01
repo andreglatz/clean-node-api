@@ -5,7 +5,7 @@ import {
   LoadAccountByTokenRepository,
 } from '../usecases/account/load-account-by-token/db-load-account-by-token-protocols';
 import { mockAccountModel, throwError } from '@/domain/test';
-import { mockDecrypter, mockLoadAccountByTokenRepository } from '../mocks';
+import { LoadAccountByTokenRepositorySpy, mockDecrypter } from '../mocks';
 
 type SutTypes = {
   sut: DbLoadAccountByToken;
@@ -15,7 +15,7 @@ type SutTypes = {
 
 const mockSut = (role?: string): SutTypes => {
   const decypterStub = mockDecrypter();
-  const loadAccountByTokenRepositoryStub = mockLoadAccountByTokenRepository();
+  const loadAccountByTokenRepositoryStub = new LoadAccountByTokenRepositorySpy();
   const sut = new DbLoadAccountByToken(decypterStub, loadAccountByTokenRepositoryStub);
 
   return {

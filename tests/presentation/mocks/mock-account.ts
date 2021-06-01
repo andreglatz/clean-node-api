@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { mockAccountModel } from '@/domain/test';
-import { AccountModel, LoadAccountByToken } from '../middlewares/auth-middleware-protocols';
+import faker from 'faker';
+
+import { LoadAccountByToken } from '../middlewares/auth-middleware-protocols';
 import { AddAccount } from '@/domain/usercases/account/add-account';
 import { Authentication } from '@/domain/usercases/account/authentication';
 
@@ -24,11 +25,10 @@ export class AuthenticationSpy implements Authentication {
   }
 }
 
-export const mockloadAccountByToken = (): LoadAccountByToken => {
-  class LoadAccountByTokenStub implements LoadAccountByToken {
-    async load(accessToken: string, role?: string): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel());
-    }
+export class LoadAccountByTokenSpy implements LoadAccountByToken {
+  loadAccountByTokenResult = { id: faker.datatype.uuid() };
+
+  async load(accessToken: string, role?: string): Promise<LoadAccountByToken.Result> {
+    return this.loadAccountByTokenResult;
   }
-  return new LoadAccountByTokenStub();
-};
+}

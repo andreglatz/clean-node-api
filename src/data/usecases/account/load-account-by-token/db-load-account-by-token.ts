@@ -1,28 +1,31 @@
-/* eslint-disable no-useless-constructor */
-import { LoadAccountByToken, AccountModel, Decrypter, LoadAccountByTokenRepository } from './db-load-account-by-token-protocols'
+import {
+  LoadAccountByToken,
+  Decrypter,
+  LoadAccountByTokenRepository,
+} from './db-load-account-by-token-protocols';
 
 export class DbLoadAccountByToken implements LoadAccountByToken {
-  constructor (
+  constructor(
     private readonly decrypter: Decrypter,
     private readonly loadAccountByTokenRepository: LoadAccountByTokenRepository
   ) {}
 
-  async load (accessToken: string, role?: string): Promise<AccountModel> {
-    let token: string
+  async load(accessToken: string, role?: string): Promise<LoadAccountByToken.Result> {
+    let token: string;
 
     try {
-      token = await this.decrypter.decrypt(accessToken)
+      token = await this.decrypter.decrypt(accessToken);
     } catch (error) {
-      return null
+      return null;
     }
 
     if (token) {
-      const account = await this.loadAccountByTokenRepository.loadByToken(accessToken, role)
+      const account = await this.loadAccountByTokenRepository.loadByToken(accessToken, role);
       if (account) {
-        return account
+        return account;
       }
     }
 
-    return null
+    return null;
   }
 }

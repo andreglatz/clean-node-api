@@ -27,14 +27,13 @@ export const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository
   return new LoadAccountByEmailRepositoryStub();
 };
 
-export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
-  class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
-    async loadByToken(token: string, role?: string): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel());
-    }
+export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
+  loadAccountByTokenRepositoryResult = mockAccountModel();
+
+  async loadByToken(token: string, role?: string): Promise<LoadAccountByTokenRepository.Result> {
+    return this.loadAccountByTokenRepositoryResult;
   }
-  return new LoadAccountByTokenRepositoryStub();
-};
+}
 
 export const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
