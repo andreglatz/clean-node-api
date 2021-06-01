@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AccountModel } from '@/domain/models/account';
-import { AddAccountParams } from '@/domain/usercases/account/add-account';
+import { AddAccount } from '@/domain/usercases/account/add-account';
 import { AuthenticationParams } from '@/domain/usercases/account/authentication';
 
-export const mockAddAccountParams = (): AddAccountParams => ({
+export const mockAddAccountParams = (): AddAccount.Params => ({
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'any_password',

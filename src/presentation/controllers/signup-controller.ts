@@ -1,10 +1,5 @@
 import { Controller, HttpResponse, Validation } from '../protocols';
-import {
-  badRequest,
-  serverError,
-  ok,
-  forbidden,
-} from '@/presentation/helpers/http/http-helper';
+import { badRequest, serverError, ok, forbidden } from '@/presentation/helpers/http/http-helper';
 import { EmailInUseError } from '@/presentation/errors';
 import { AddAccount } from '@/domain/usercases/account/add-account';
 import { Authentication } from '@/domain/usercases/account/authentication';
@@ -25,13 +20,13 @@ export class SignUpController implements Controller {
 
       const { name, email, password } = request;
 
-      const account = await this.addAccount.add({
+      const isValid = await this.addAccount.add({
         name,
         email,
         password,
       });
 
-      if (!account) {
+      if (!isValid) {
         return forbidden(new EmailInUseError());
       }
 

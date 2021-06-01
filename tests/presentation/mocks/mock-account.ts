@@ -1,25 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { mockAccountModel } from '@/domain/test';
-import {
-  AccountModel,
-  LoadAccountByToken,
-} from '../middlewares/auth-middleware-protocols';
+import { AccountModel, LoadAccountByToken } from '../middlewares/auth-middleware-protocols';
 import { AuthenticationModel } from '@/domain/models/authentication';
-import { AddAccount, AddAccountParams } from '@/domain/usercases/account/add-account';
-import {
-  Authentication,
-  AuthenticationParams,
-} from '@/domain/usercases/account/authentication';
+import { AddAccount } from '@/domain/usercases/account/add-account';
+import { Authentication, AuthenticationParams } from '@/domain/usercases/account/authentication';
 
-export const mockAddAccount = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    public async add(account: AddAccountParams): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel());
-    }
+export class AddAccountSpy implements AddAccount {
+  isValid = true;
+  addAccountParas: AddAccount.Params;
+
+  public async add(account: AddAccount.Params): Promise<AddAccount.Result> {
+    return this.isValid;
   }
-
-  return new AddAccountStub();
-};
+}
 
 export const mockAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
