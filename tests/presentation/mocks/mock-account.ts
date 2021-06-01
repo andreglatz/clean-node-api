@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { mockAccountModel } from '@/domain/test';
 import { AccountModel, LoadAccountByToken } from '../middlewares/auth-middleware-protocols';
-import { AuthenticationModel } from '@/domain/models/authentication';
 import { AddAccount } from '@/domain/usercases/account/add-account';
-import { Authentication, AuthenticationParams } from '@/domain/usercases/account/authentication';
+import { Authentication } from '@/domain/usercases/account/authentication';
 
 export class AddAccountSpy implements AddAccount {
   isValid = true;
@@ -14,20 +13,16 @@ export class AddAccountSpy implements AddAccount {
   }
 }
 
-export const mockAuthentication = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async auth(authentication: AuthenticationParams): Promise<AuthenticationModel> {
-      const authenticationModel = {
-        accessToken: 'any_token',
-        name: 'any_name',
-      };
+export class AuthenticationSpy implements Authentication {
+  authenticationResult: Authentication.Result = {
+    accessToken: 'any_token',
+    name: 'any_name',
+  };
 
-      return Promise.resolve(authenticationModel);
-    }
+  async auth(authentication: Authentication.Params): Promise<Authentication.Result> {
+    return this.authenticationResult;
   }
-
-  return new AuthenticationStub();
-};
+}
 
 export const mockloadAccountByToken = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {

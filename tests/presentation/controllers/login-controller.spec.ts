@@ -1,14 +1,9 @@
 import faker from 'faker';
 import { LoginController } from '@/presentation/controllers';
 import { MissingParamError } from '@/presentation/errors';
-import {
-  badRequest,
-  serverError,
-  unathorized,
-  ok,
-} from '@/presentation/helpers/http/http-helper';
+import { badRequest, serverError, unathorized, ok } from '@/presentation/helpers/http/http-helper';
 import { throwError } from '@/domain/test';
-import { mockAuthentication } from '../mocks';
+import { AuthenticationSpy } from '../mocks';
 import { mockValidation } from '@/validation/test';
 import { Validation } from '../protocols';
 import { Authentication } from '@/domain/usercases/account/authentication';
@@ -25,7 +20,7 @@ type SutTypes = {
 };
 
 const mockSut = (): SutTypes => {
-  const authenticationStub = mockAuthentication();
+  const authenticationStub = new AuthenticationSpy();
   const validationStub = mockValidation();
   const sut = new LoginController(validationStub, authenticationStub);
 
@@ -77,9 +72,7 @@ describe('Login Controller', () => {
 
   test('Should return 400 if validation returns an error', async () => {
     const { sut, validationStub } = mockSut();
-    jest
-      .spyOn(validationStub, 'validate')
-      .mockReturnValueOnce(new MissingParamError('any_field'));
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'));
     const httpResponse = await sut.handle(mockRequest());
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')));
   });

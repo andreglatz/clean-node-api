@@ -6,7 +6,7 @@ import { Validation } from '@/presentation/protocols';
 import { ok, badRequest, serverError, forbidden } from '@/presentation/helpers/http/http-helper';
 import { throwError } from '@/domain/test';
 import { mockValidation } from '@/validation/test';
-import { AddAccountSpy, mockAuthentication } from '../mocks';
+import { AddAccountSpy, AuthenticationSpy } from '../mocks';
 import { AddAccount } from '@/domain/usercases/account/add-account';
 import { Authentication } from '@/domain/usercases/account/authentication';
 
@@ -31,7 +31,7 @@ const mockSut = (): SutTypes => {
   const addAccountSpy = new AddAccountSpy();
 
   const validationStub = mockValidation();
-  const authenticationStub = mockAuthentication();
+  const authenticationStub = new AuthenticationSpy();
   const sut = new SignUpController(addAccountSpy, validationStub, authenticationStub);
 
   return {
