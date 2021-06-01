@@ -1,7 +1,7 @@
 import faker from 'faker';
 
 import { SurveyModel } from '@/domain/models/survey';
-import { AddSurveyParams } from '@/domain/usercases/survey/add-survey';
+import { AddSurvey } from '../usercases/survey/add-survey';
 
 export const mockSurveyModel = (): SurveyModel => ({
   id: faker.datatype.uuid(),
@@ -18,7 +18,7 @@ export const mockSurveyModel = (): SurveyModel => ({
   date: new Date(),
 });
 
-export const mockAddSurveyParams = (): AddSurveyParams => ({
+export const mockAddSurveyParams = (): AddSurvey.Params => ({
   question: faker.random.word(),
   answers: [
     {

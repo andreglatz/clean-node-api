@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SurveyModel } from '@/domain/models/survey';
-import { AddSurvey, AddSurveyParams } from '@/domain/usercases/survey/add-survey';
+import { AddSurvey } from '@/domain/usercases/survey/add-survey';
 import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
 import { LoadSurveys } from '@/domain/usercases/survey/load-surveys';
 
-export const mockAddSurvey = (): AddSurvey => {
-  class AddSurveyStub implements AddSurvey {
-    async add(data: AddSurveyParams): Promise<void> {}
-  }
+export class AddSurveySpy implements AddSurvey {
+  addSurveyParams: AddSurvey.Params;
 
-  return new AddSurveyStub();
-};
+  async add(survey: AddSurvey.Params): Promise<void> {
+    this.addSurveyParams = survey;
+  }
+}
 
 export const mockLoadSurvey = (surveysModel: SurveyModel[]): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {

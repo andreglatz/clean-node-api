@@ -4,7 +4,7 @@ import { MongoHelper } from '../../../src/infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb';
 import { sign } from 'jsonwebtoken';
 import env from '@/main/config/env';
-import { AddSurveyParams } from '@/domain/usercases/survey/add-survey';
+import { AddSurvey } from '@/domain/usercases/survey/add-survey';
 
 let accountCollection: Collection;
 let surveyCollection: Collection;
@@ -24,7 +24,7 @@ const mockAccessToken = async (): Promise<string> => {
 };
 
 const mockInsertSurvey = async (): Promise<string> => {
-  const surveyFake: AddSurveyParams = {
+  const surveyFake: AddSurvey.Params = {
     question: 'Question',
     answers: [
       {
@@ -64,10 +64,7 @@ describe('Login Routes', () => {
     test('Should return 403 on save survey result without accessToken', async () => {
       const surveyResultRequest = { answer: 'any_answer' };
 
-      await request(app)
-        .put('/api/surveys/any_id/results')
-        .send(surveyResultRequest)
-        .expect(403);
+      await request(app).put('/api/surveys/any_id/results').send(surveyResultRequest).expect(403);
     });
 
     test('Should return 200 on save survey with valid accessToken', async () => {

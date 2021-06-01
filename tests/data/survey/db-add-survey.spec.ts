@@ -8,7 +8,7 @@ import {
 
 import { DbAddSurvey } from '@/data/usecases/survey/add-survey/db-add-survey';
 import { throwError, mockAddSurveyParams } from '@/domain/test';
-import { mockAddSurveyRepository } from '../mocks';
+import { AddSurveyRepositorySpy } from '../mocks';
 
 type SutTypes = {
   sut: AddSurvey;
@@ -16,7 +16,7 @@ type SutTypes = {
 };
 
 const mockSut = (): SutTypes => {
-  const addSurveyRepositoryStub = mockAddSurveyRepository();
+  const addSurveyRepositoryStub = new AddSurveyRepositorySpy();
   const sut = new DbAddSurvey(addSurveyRepositoryStub);
 
   return {

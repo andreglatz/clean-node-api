@@ -4,7 +4,7 @@ import { MongoHelper } from '../../../src/infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb';
 import { sign } from 'jsonwebtoken';
 import env from '../../../src/main/config/env';
-import { AddSurveyParams } from '../../../src/domain/usercases/survey/add-survey';
+import { AddSurvey } from '../../../src/domain/usercases/survey/add-survey';
 
 let surveyCollection: Collection;
 let accountCollection: Collection;
@@ -24,7 +24,7 @@ const mockAccessToken = async (): Promise<string> => {
   return accessToken;
 };
 
-const mockSurveyRequest = (): AddSurveyParams => ({
+const mockSurveyRequest = (): AddSurvey.Params => ({
   question: 'Question',
   answers: [
     {
@@ -81,10 +81,7 @@ describe('Login Routes', () => {
 
     test('Should return 204 on load surveys with valid accessToken', async () => {
       const accessToken = await mockAccessToken();
-      await request(app)
-        .get('/api/surveys')
-        .set('x-access-token', accessToken)
-        .expect(204);
+      await request(app).get('/api/surveys').set('x-access-token', accessToken).expect(204);
     });
   });
 });

@@ -1,16 +1,12 @@
 import faker from 'faker';
 import { AddSurveyController } from '@/presentation/controllers';
-import {
-  badRequest,
-  serverError,
-  noContent,
-} from '@/presentation/helpers/http/http-helper';
+import { badRequest, serverError, noContent } from '@/presentation/helpers/http/http-helper';
 import mockDate from 'mockdate';
 import { throwError } from '@/domain/test';
 import { mockValidation } from '@/validation/test';
-import { mockAddSurvey } from '../mocks';
 import { Controller, Validation } from '../protocols';
 import { AddSurvey } from '@/domain/usercases/survey/add-survey';
+import { AddSurveySpy } from '../mocks';
 
 const mockFakeRequest = (): AddSurveyController.Request => ({
   question: faker.random.words(),
@@ -30,7 +26,7 @@ type SutTypes = {
 
 const mockSut = (): SutTypes => {
   const validationStub = mockValidation();
-  const addSurveyStub = mockAddSurvey();
+  const addSurveyStub = new AddSurveySpy();
   const sut = new AddSurveyController(validationStub, addSurveyStub);
 
   return {
