@@ -1,17 +1,17 @@
 import mockDate from 'mockdate';
+import faker from 'faker';
+
 import { LoadSurveyResultController } from '@/presentation/controllers';
 import { mockLoadSurveyById, mockLoadSurveyResult } from '../mocks';
-import { throwError, mockSurveyResultModel } from '@/domain/test';
+import { throwError, mockSurveyResultModel, mockSurveyModel } from '@/domain/test';
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper';
-import { Controller, HttpRequest } from '@/presentation/protocols';
+import { Controller } from '@/presentation/protocols';
 import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
 import { LoadSurveyResult } from '@/domain/usercases/survey-result/load-survey-result';
 import { InvalidParamError } from '@/presentation/errors';
 
-const mockRequest = (): HttpRequest => ({
-  params: {
-    surveyId: 'any_id',
-  },
+const mockRequest = (): LoadSurveyResultController.Request => ({
+  surveyId: faker.datatype.uuid(),
 });
 
 type SutTypes = {
@@ -21,7 +21,7 @@ type SutTypes = {
 };
 
 const mockSut = (): SutTypes => {
-  const loadSurveyByIdStub = mockLoadSurveyById();
+  const loadSurveyByIdStub = mockLoadSurveyById(mockSurveyModel());
   const loadSurveyResultStub = mockLoadSurveyResult();
   const sut = new LoadSurveyResultController(loadSurveyByIdStub, loadSurveyResultStub);
 
@@ -43,8 +43,10 @@ describe('LoadSurveyResult Controller', () => {
   test('Should call LoadSurveyById with correct value', async () => {
     const { sut, loadSurveyByIdStub } = mockSut();
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById');
-    await sut.handle(mockRequest());
-    expect(loadByIdSpy).toHaveBeenCalledWith('any_id');
+
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(loadByIdSpy).toHaveBeenCalledWith(request.surveyId);
   });
 
   test('Should return 403 if LoadSurveyById returns null', async () => {
@@ -64,8 +66,10 @@ describe('LoadSurveyResult Controller', () => {
   test('Should call LoadSurveyResult with correct value', async () => {
     const { sut, loadSurveyResultStub } = mockSut();
     const loadSpy = jest.spyOn(loadSurveyResultStub, 'load');
-    await sut.handle(mockRequest());
-    expect(loadSpy).toHaveBeenCalledWith('any_id');
+
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(loadSpy).toHaveBeenCalledWith(request.surveyId);
   });
 
   test('Should return 500 if LoadSurveyResult throws', async () => {

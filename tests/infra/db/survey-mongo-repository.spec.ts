@@ -45,8 +45,10 @@ describe('Account Mongo Repository', () => {
   describe('add()', () => {
     test('Should add an survey on success', async () => {
       const sut = mockSut();
-      await sut.add(mockAddSurveyParams());
-      const survey = await surveyCollection.findOne({ question: 'any_question' });
+
+      const surveyParams = mockAddSurveyParams();
+      await sut.add(surveyParams);
+      const survey = await surveyCollection.findOne({ question: surveyParams.question });
       expect(survey).toBeTruthy();
     });
   });
@@ -69,9 +71,9 @@ describe('Account Mongo Repository', () => {
       const surveys = await sut.loadAll(account.id);
       expect(surveys.length).toBe(2);
       expect(surveys[0].id).toBeTruthy();
-      expect(surveys[0].question).toBe('any_question');
+      expect(surveys[0].question).toBe(surveysFake[0].question);
       expect(surveys[0].didAnswer).toBe(true);
-      expect(surveys[1].question).toBe('any_question');
+      expect(surveys[1].question).toBe(surveysFake[1].question);
       expect(surveys[1].didAnswer).toBe(false);
     });
 

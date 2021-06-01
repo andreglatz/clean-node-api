@@ -1,6 +1,4 @@
-/* eslint-disable no-useless-constructor */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Controller, HttpRequest, HttpResponse, Validation } from '../protocols';
+import { Controller, HttpResponse, Validation } from '../protocols';
 import {
   badRequest,
   serverError,
@@ -15,14 +13,14 @@ export class LoginController implements Controller {
     private readonly authentication: Authentication
   ) {}
 
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle(request: LoginController.Request): Promise<HttpResponse> {
     try {
-      const error = this.validation.validate(httpRequest.body);
+      const error = this.validation.validate(request);
       if (error) {
         return badRequest(error);
       }
 
-      const { email, password } = httpRequest.body;
+      const { email, password } = request;
       const authenticationModel = await this.authentication.auth({ email, password });
 
       if (!authenticationModel) {
@@ -34,4 +32,11 @@ export class LoginController implements Controller {
       return serverError(error);
     }
   }
+}
+
+export namespace LoginController {
+  export type Request = {
+    email: string;
+    password: string;
+  };
 }

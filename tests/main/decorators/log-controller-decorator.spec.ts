@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import faker from 'faker';
+
 import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator';
-import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols';
+import { Controller, HttpResponse } from '@/presentation/protocols';
 import { serverError, ok } from '@/presentation/helpers/http/http-helper';
 import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository';
 import { mockAccountModel } from '@/domain/test';
@@ -12,18 +13,20 @@ const mockFakeServerError = (): HttpResponse => {
   return serverError(fakeError);
 };
 
-const mockFakeRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password',
-  },
-});
+const mockFakeRequest = (): any => {
+  const password = faker.internet.password();
+
+  return {
+    name: faker.name.firstName(),
+    email: faker.internet.email(),
+    password,
+    passwordConfirmation: password,
+  };
+};
 
 const mockController = (): Controller => {
   class ControllerStub implements Controller {
-    async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+    async handle(httpRequest: any): Promise<HttpResponse> {
       return Promise.resolve(ok(mockAccountModel()));
     }
   }
@@ -53,8 +56,10 @@ describe('LogControllerDecorator', () => {
   test('Shoud call controller handle', async () => {
     const { sut, controllerStub } = mockSut();
     const handleSpy = jest.spyOn(controllerStub, 'handle');
-    await sut.handle(mockFakeRequest());
-    expect(handleSpy).toHaveBeenCalledWith(mockFakeRequest());
+
+    const request = mockFakeRequest();
+    await sut.handle(request);
+    expect(handleSpy).toHaveBeenCalledWith(request);
   });
 
   test('Shoud return the same result of the controller', async () => {

@@ -1,23 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import faker from 'faker';
 import mockDate from 'mockdate';
 
 import { SaveSurveyResultController } from '@/presentation/controllers';
 import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
 import { forbidden, serverError, ok } from '@/presentation/helpers/http/http-helper';
 import { InvalidParamError } from '@/presentation/errors';
-import { throwError, mockSurveyResultModel } from '@/domain/test';
+import { throwError, mockSurveyResultModel, mockSurveyModel } from '@/domain/test';
 import { mockLoadSurveyById, mockSaveSurveyResult } from '../mocks';
-import { Controller, HttpRequest } from '../protocols';
+import { Controller } from '../protocols';
 import { SaveSurveyResult } from '@/domain/usercases/survey-result/save-survey-result';
 
-const mockRequest = (): HttpRequest => ({
-  params: {
-    surveyId: 'any_survey_id',
-  },
-  body: {
-    answer: 'any_answer',
-  },
-  accountId: 'any_account_id',
+const surveyModel = mockSurveyModel();
+
+const mockRequest = (): SaveSurveyResultController.Request => ({
+  surveyId: faker.datatype.uuid(),
+  accountId: faker.datatype.uuid(),
+  answer: surveyModel.answers[0].answer,
 });
 
 type SutTypes = {
@@ -27,7 +25,7 @@ type SutTypes = {
 };
 
 const mockSut = (): SutTypes => {
-  const loadSurveyByIdStub = mockLoadSurveyById();
+  const loadSurveyByIdStub = mockLoadSurveyById(surveyModel);
   const saveSurveyResultStub = mockSaveSurveyResult();
   const sut = new SaveSurveyResultController(loadSurveyByIdStub, saveSurveyResultStub);
 
@@ -50,8 +48,10 @@ describe('SaveSurveyResult Controller', () => {
   test('Should call LoadSurveyById with correct values', async () => {
     const { sut, loadSurveyByIdStub } = mockSut();
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById');
-    await sut.handle(mockRequest());
-    expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id');
+
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(loadByIdSpy).toHaveBeenCalledWith(request.surveyId);
   });
 
   test('Should return 403 if LoadSurveyById returns null', async () => {
@@ -87,11 +87,11 @@ describe('SaveSurveyResult Controller', () => {
   test('Should call SaveSurveyResult with correct values', async () => {
     const { sut, saveSurveyResultStub } = mockSut();
     const saveSpy = jest.spyOn(saveSurveyResultStub, 'save');
-    await sut.handle(mockRequest());
+
+    const request = mockRequest();
+    await sut.handle(request);
     expect(saveSpy).toHaveBeenCalledWith({
-      surveyId: 'any_survey_id',
-      accountId: 'any_account_id',
-      answer: 'any_answer',
+      ...request,
       date: new Date(),
     });
   });

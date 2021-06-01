@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import faker from 'faker';
 import { LoginController } from '@/presentation/controllers';
 import { MissingParamError } from '@/presentation/errors';
 import {
@@ -10,14 +10,12 @@ import {
 import { throwError } from '@/domain/test';
 import { mockAuthentication } from '../mocks';
 import { mockValidation } from '@/validation/test';
-import { HttpRequest, Validation } from '../protocols';
+import { Validation } from '../protocols';
 import { Authentication } from '@/domain/usercases/account/authentication';
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    email: 'any_email@mail.com',
-    password: 'any_password',
-  },
+const mockRequest = (): LoginController.Request => ({
+  email: faker.internet.email(),
+  password: faker.internet.password(),
 });
 
 type SutTypes = {
@@ -42,11 +40,11 @@ describe('Login Controller', () => {
   test('Should call Authentication with correct values', async () => {
     const { sut, authenticationStub } = mockSut();
     const authSpy = jest.spyOn(authenticationStub, 'auth');
-    await sut.handle(mockRequest());
-    expect(authSpy).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
-      password: 'any_password',
-    });
+
+    const request = mockRequest();
+    await sut.handle(request);
+
+    expect(authSpy).toHaveBeenCalledWith(request);
   });
 
   test('Should return 401 if invalid credentials are provided', async () => {
@@ -72,9 +70,9 @@ describe('Login Controller', () => {
   test('Should call Validation with correct values', async () => {
     const { sut, validationStub } = mockSut();
     const validateSpy = jest.spyOn(validationStub, 'validate');
-    const httpRequest = mockRequest();
-    await sut.handle(httpRequest);
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(validateSpy).toHaveBeenCalledWith(request);
   });
 
   test('Should return 400 if validation returns an error', async () => {

@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-constructor */
-import { Controller, HttpRequest, HttpResponse } from '../protocols';
+import { Controller, HttpResponse } from '../protocols';
 
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper';
 import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
@@ -12,9 +12,9 @@ export class LoadSurveyResultController implements Controller {
     private readonly loadSurveyResult: LoadSurveyResult
   ) {}
 
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle(request: LoadSurveyResultController.Request): Promise<HttpResponse> {
     try {
-      const { surveyId } = httpRequest.params;
+      const { surveyId } = request;
       const survey = await this.loadSurveyById.loadById(surveyId);
       if (!survey) {
         return forbidden(new InvalidParamError('surveyId'));
@@ -27,4 +27,10 @@ export class LoadSurveyResultController implements Controller {
       return serverError(error);
     }
   }
+}
+
+export namespace LoadSurveyResultController {
+  export type Request = {
+    surveyId: string;
+  };
 }

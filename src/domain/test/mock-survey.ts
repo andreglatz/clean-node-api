@@ -1,55 +1,57 @@
-import { SurveyModel } from '@/domain/models/survey'
-import { AddSurveyParams } from '@/domain/usercases/survey/add-survey'
+import faker from 'faker';
+
+import { SurveyModel } from '@/domain/models/survey';
+import { AddSurveyParams } from '@/domain/usercases/survey/add-survey';
 
 export const mockSurveyModel = (): SurveyModel => ({
-  id: 'any_id',
-  question: 'any_question',
+  id: faker.datatype.uuid(),
+  question: faker.random.word(),
   answers: [
     {
-      answer: 'any_answer'
+      answer: faker.random.word(),
     },
     {
-      answer: 'other_answer',
-      image: 'any_image'
-    }
+      answer: faker.random.word(),
+      image: faker.image.imageUrl(),
+    },
   ],
-  date: new Date()
-})
+  date: new Date(),
+});
 
 export const mockAddSurveyParams = (): AddSurveyParams => ({
-  question: 'any_question',
+  question: faker.random.word(),
   answers: [
     {
-      image: 'any_image',
-      answer: 'any_answer'
-    }
+      answer: faker.random.word(),
+      image: faker.image.imageUrl(),
+    },
   ],
-  date: new Date()
-})
+  date: new Date(),
+});
 
 export const mockSurveyModels = (): SurveyModel[] => {
   return [
     {
-      id: 'any_id',
-      question: 'any_question',
+      id: faker.datatype.uuid(),
+      question: faker.random.word(),
       answers: [
         {
-          image: 'any_image',
-          answer: 'any_answer'
-        }
+          answer: faker.random.word(),
+          image: faker.image.imageUrl(),
+        },
       ],
-      date: new Date()
+      date: new Date(),
     },
     {
-      id: 'other_id',
-      question: 'other_question',
+      id: faker.datatype.uuid(),
+      question: faker.random.word(),
       answers: [
         {
-          image: 'other_image',
-          answer: 'other_answer'
-        }
+          answer: faker.random.word(),
+          image: faker.image.imageUrl(),
+        },
       ],
-      date: new Date()
-    }
-  ]
-}
+      date: new Date(),
+    },
+  ];
+};
