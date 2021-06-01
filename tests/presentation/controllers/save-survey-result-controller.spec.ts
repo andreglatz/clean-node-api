@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import mockDate from 'mockdate';
+
 import { SaveSurveyResultController } from '@/presentation/controllers';
 import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
 import { forbidden, serverError, ok } from '@/presentation/helpers/http/http-helper';
 import { InvalidParamError } from '@/presentation/errors';
 import { throwError, mockSurveyResultModel } from '@/domain/test';
 import { mockLoadSurveyById, mockSaveSurveyResult } from '../mocks';
-import mockDate from 'mockdate';
 import { Controller, HttpRequest } from '../protocols';
 import { SaveSurveyResult } from '@/domain/usercases/survey-result/save-survey-result';
 

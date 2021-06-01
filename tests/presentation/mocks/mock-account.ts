@@ -1,40 +1,46 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { mockAccountModel } from '@/domain/test'
-import { AddAccount, AddAccountParams, AccountModel } from '@/presentation/controllers/login/signup/signup-controller-protocols'
-import { Authentication, AuthenticationParams } from '../controllers/login/login/login-controller-protocols'
-import { LoadAccountByToken } from '../middlewares/auth-middleware-protocols'
-import { AuthenticationModel } from '@/domain/models/authentication'
+import { mockAccountModel } from '@/domain/test';
+import {
+  AccountModel,
+  LoadAccountByToken,
+} from '../middlewares/auth-middleware-protocols';
+import { AuthenticationModel } from '@/domain/models/authentication';
+import { AddAccount, AddAccountParams } from '@/domain/usercases/account/add-account';
+import {
+  Authentication,
+  AuthenticationParams,
+} from '@/domain/usercases/account/authentication';
 
 export const mockAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    public async add (account: AddAccountParams): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel())
+    public async add(account: AddAccountParams): Promise<AccountModel> {
+      return Promise.resolve(mockAccountModel());
     }
   }
 
-  return new AddAccountStub()
-}
+  return new AddAccountStub();
+};
 
 export const mockAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationParams): Promise<AuthenticationModel> {
+    async auth(authentication: AuthenticationParams): Promise<AuthenticationModel> {
       const authenticationModel = {
         accessToken: 'any_token',
-        name: 'any_name'
-      }
+        name: 'any_name',
+      };
 
-      return Promise.resolve(authenticationModel)
+      return Promise.resolve(authenticationModel);
     }
   }
 
-  return new AuthenticationStub()
-}
+  return new AuthenticationStub();
+};
 
 export const mockloadAccountByToken = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
-    async load (accessToken: string, role?: string): Promise<AccountModel> {
-      return Promise.resolve(mockAccountModel())
+    async load(accessToken: string, role?: string): Promise<AccountModel> {
+      return Promise.resolve(mockAccountModel());
     }
   }
-  return new LoadAccountByTokenStub()
-}
+  return new LoadAccountByTokenStub();
+};

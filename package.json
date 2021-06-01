@@ -5,7 +5,7 @@
   "author": "Andre Glatz <andreglatz@outlook.com>",
   "license": "MIT",
   "engines": {
-    "node": "12.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "node dist/main/server.js",

@@ -3,10 +3,10 @@ import { LoadSurveyResultController } from '@/presentation/controllers';
 import { mockLoadSurveyById, mockLoadSurveyResult } from '../mocks';
 import { throwError, mockSurveyResultModel } from '@/domain/test';
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper';
-import { Controller, HttpRequest } from '../protocols';
+import { Controller, HttpRequest } from '@/presentation/protocols';
 import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
 import { LoadSurveyResult } from '@/domain/usercases/survey-result/load-survey-result';
-import { InvalidParamError } from '../errors';
+import { InvalidParamError } from '@/presentation/errors';
 
 const mockRequest = (): HttpRequest => ({
   params: {
