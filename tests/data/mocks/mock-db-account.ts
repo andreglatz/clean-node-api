@@ -6,11 +6,20 @@ import { LoadAccountByTokenRepository } from '../protocols/db/account/load-accou
 import { UpdateAccessTokenRepository } from '../protocols/db/account/update-access-token-repository';
 
 import faker from 'faker';
+import { CheckAccountByEmailRepository } from '../protocols/db/account';
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   result = true;
 
   async add(accountData: AddAccount.Params): Promise<AddAccount.Result> {
+    return this.result;
+  }
+}
+
+export class CheckAccountByEmailRepositorySpy implements CheckAccountByEmailRepository {
+  result = false;
+
+  async checkByEmail(email: string): Promise<CheckAccountByEmailRepository.Result> {
     return this.result;
   }
 }
