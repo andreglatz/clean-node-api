@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SurveyModel } from '@/domain/models/survey';
-import { mockSurveyModel } from '@/domain/test';
 import { AddSurvey } from '@/domain/usercases/survey/add-survey';
 import { CheckSurveyById } from '@/domain/usercases/survey/check-survey-by-id';
-import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
+import { LoadAnswersBySurvey } from '@/domain/usercases/survey/load-answers-by-survey';
 import { LoadSurveys } from '@/domain/usercases/survey/load-surveys';
+
+import faker from 'faker';
 
 export class AddSurveySpy implements AddSurvey {
   addSurveyParams: AddSurvey.Params;
@@ -32,10 +33,10 @@ export class CheckSurveyByIdSpy implements CheckSurveyById {
   }
 }
 
-export class LoadSurveyByIdSpy implements LoadSurveyById {
-  result = mockSurveyModel();
+export class LoadAnsersBySurveySpy implements LoadAnswersBySurvey {
+  result = [faker.random.word(), faker.random.word()];
 
-  async loadById(id: string): Promise<LoadSurveyById.Reuslt> {
+  async loadAnswers(id: string): Promise<LoadAnswersBySurvey.Reuslt> {
     return this.result;
   }
 }
