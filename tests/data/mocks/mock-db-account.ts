@@ -1,31 +1,31 @@
 import { AddAccountRepository } from '../protocols/db/account/add-account-repository';
-import { AccountModel } from '../usecases/account/add-account/db-add-account-protocols';
+import { AccountModel, AddAccount } from '../usecases/account/add-account/db-add-account-protocols';
 import { mockAccountModel } from '@/domain/test';
 import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository';
 import { LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository';
 import { UpdateAccessTokenRepository } from '../protocols/db/account/update-access-token-repository';
 
-export const mockAddAccountRepository = (): AddAccountRepository => {
-  class AddAccountRepositoryStub implements AddAccountRepository {
-    async add(accountData: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
-      return Promise.resolve(mockAccountModel());
-    }
+import faker from 'faker';
+
+export class AddAccountRepositorySpy implements AddAccountRepository {
+  result = true;
+
+  async add(accountData: AddAccount.Params): Promise<AddAccount.Result> {
+    return this.result;
   }
+}
 
-  return new AddAccountRepositoryStub();
-};
+export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
+  result = {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    password: faker.internet.password(),
+  };
 
-export const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail(email: string): Promise<AccountModel | null> {
-      const accountModel = mockAccountModel();
-      accountModel.password = 'hashed_password';
-      return Promise.resolve(accountModel);
-    }
+  async loadByEmail(email: string): Promise<LoadAccountByEmailRepository.Result> {
+    return this.result;
   }
-
-  return new LoadAccountByEmailRepositoryStub();
-};
+}
 
 export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
   loadAccountByTokenRepositoryResult = mockAccountModel();

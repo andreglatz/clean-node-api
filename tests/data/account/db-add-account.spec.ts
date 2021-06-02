@@ -6,32 +6,31 @@ import {
   LoadAccountByEmailRepository,
 } from '../../../src/data/usecases/account/add-account/db-add-account-protocols';
 import { mockAccountModel, mockAddAccountParams } from '@/domain/test';
-import { mockHasher, mockAddAccountRepository, mockLoadAccountByEmailRepository } from '../mocks';
+import { mockHasher, AddAccountRepositorySpy, LoadAccountByEmailRepositorySpy } from '../mocks';
 
 type SutTypes = {
   sut: DbAddAccount;
   hasherStub: Hasher;
-  addAccountRepositoryStub: AddAccountRepository;
+  addAccountRepositorySpy: AddAccountRepositorySpy;
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
 };
 
 const mockSut = (): SutTypes => {
   const hasherStub = mockHasher();
-  const addAccountRepositoryStub = mockAddAccountRepository();
-  const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository();
-  jest
-    .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
-    .mockReturnValue(Promise.resolve(null));
+  const addAccountRepositorySpy = new AddAccountRepositorySpy();
+  const loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositorySpy();
+
+  jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockResolvedValue(null);
 
   const sut = new DbAddAccount(
     hasherStub,
-    addAccountRepositoryStub,
+    addAccountRepositorySpy,
     loadAccountByEmailRepositoryStub
   );
   return {
     sut,
     hasherStub,
-    addAccountRepositoryStub,
+    addAccountRepositorySpy,
     loadAccountByEmailRepositoryStub,
   };
 };
@@ -54,8 +53,8 @@ describe('DbAddAccount Usecase', () => {
   });
 
   test('Should call AddAccountRepository with correct values', async () => {
-    const { sut, addAccountRepositoryStub } = mockSut();
-    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add');
+    const { sut, addAccountRepositorySpy } = mockSut();
+    const addSpy = jest.spyOn(addAccountRepositorySpy, 'add');
     await sut.add(mockAddAccountParams());
 
     expect(addSpy).toHaveBeenCalledWith({
@@ -65,17 +64,28 @@ describe('DbAddAccount Usecase', () => {
     });
   });
 
-  test('Should return true if LoadAccountByEmailRepository returns null', async () => {
+  test('Should return true on success', async () => {
     const { sut } = mockSut();
     const isValid = await sut.add(mockAddAccountParams());
-    expect(isValid).toBeTruthy();
+    expect(isValid).toBe(true);
+  });
+
+  test('Should return false if LoadAccountByEmailRepository returns false', async () => {
+    const { sut, addAccountRepositorySpy } = mockSut();
+
+    addAccountRepositorySpy.result = false;
+
+    const isValid = await sut.add(mockAddAccountParams());
+    expect(isValid).toBe(false);
   });
 
   test('Should return false if LoadAccountByEmailRepository returns an account', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = mockSut();
+
     jest
       .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
-      .mockReturnValueOnce(Promise.resolve(mockAccountModel()));
+      .mockResolvedValueOnce(mockAccountModel());
+
     const isValid = await sut.add(mockAddAccountParams());
     expect(isValid).toBeFalsy();
   });
