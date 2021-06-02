@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { SurveyModel } from '@/domain/models/survey';
+import { mockSurveyModel } from '@/domain/test';
 import { AddSurvey } from '@/domain/usercases/survey/add-survey';
+import { CheckSurveyById } from '@/domain/usercases/survey/check-survey-by-id';
 import { LoadSurveyById } from '@/domain/usercases/survey/load-survey-by-id';
 import { LoadSurveys } from '@/domain/usercases/survey/load-surveys';
 
@@ -22,11 +24,18 @@ export const mockLoadSurvey = (surveysModel: SurveyModel[]): LoadSurveys => {
   return new LoadSurveysStub();
 };
 
-export const mockLoadSurveyById = (surveyModel: SurveyModel): LoadSurveyById => {
-  class LoadSurveyByIdStub implements LoadSurveyById {
-    async loadById(id: string): Promise<SurveyModel> {
-      return surveyModel;
-    }
+export class CheckSurveyByIdSpy implements CheckSurveyById {
+  result = true;
+
+  async checkById(id: string): Promise<CheckSurveyById.Reuslt> {
+    return this.result;
   }
-  return new LoadSurveyByIdStub();
-};
+}
+
+export class LoadSurveyByIdSpy implements LoadSurveyById {
+  result = mockSurveyModel();
+
+  async loadById(id: string): Promise<LoadSurveyById.Reuslt> {
+    return this.result;
+  }
+}

@@ -1,6 +1,6 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { SurveyMongoRepository } from '@/infra/db/mongodb/repositories';
-import { Collection } from 'mongodb';
+import { Collection, ObjectID, ObjectId } from 'mongodb';
 import { mockAddSurveyParams } from '@/domain/test/index';
 import { AccountModel } from '@/domain/models/account';
 
@@ -96,6 +96,27 @@ describe('Account Mongo Repository', () => {
       const survey = await sut.loadById(id);
       expect(survey).toBeTruthy();
       expect(survey.id).toBeTruthy();
+    });
+  });
+
+  describe('checkById()', () => {
+    test('Should return true if survey exists', async () => {
+      const surveysFake = mockAddSurveyParams();
+
+      const surveyAdded = await surveyCollection.insertOne(surveysFake);
+      const id = surveyAdded.ops[0]._id;
+
+      const sut = mockSut();
+      const exists = await sut.checkById(id);
+
+      expect(exists).toBe(true);
+    });
+
+    test('Should return true if survey exists', async () => {
+      const sut = mockSut();
+      const exists = await sut.checkById(new ObjectID().toHexString());
+
+      expect(exists).toBe(false);
     });
   });
 });
