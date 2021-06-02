@@ -27,6 +27,7 @@ export default (app: Express): void => {
     typeDefs,
     schemaDirectives,
     context: ({ req }) => ({ req }),
+    playground: false,
     plugins: [
       {
         requestDidStart: () => ({
