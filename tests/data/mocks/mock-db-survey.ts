@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-repository';
+import { mockSurveyModel } from '@/domain/test';
 import { LoadSurveyByIdRepository } from '../protocols/db/survey/load-survey-by-id-repository';
 import {
   SurveyModel,
@@ -14,16 +15,13 @@ export class AddSurveyRepositorySpy implements AddSurveyRepository {
   }
 }
 
-export const mockLoadSurveyByIdRepository = (
-  surveyModel: SurveyModel
-): LoadSurveyByIdRepository => {
-  class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
-    async loadById(): Promise<SurveyModel> {
-      return surveyModel;
-    }
+export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
+  result = mockSurveyModel();
+
+  async loadById(): Promise<SurveyModel> {
+    return this.result;
   }
-  return new LoadSurveyByIdRepositoryStub();
-};
+}
 
 export const mockLoadSurveysRepository = (surveyModels: SurveyModel[]): LoadSurveysRepository => {
   class LoadSurveysRepositoryStub implements LoadSurveysRepository {

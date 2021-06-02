@@ -5,30 +5,25 @@ import {
   LoadSurveyByIdRepository,
 } from '@/data/usecases/survey-result/load-survey-result/db-load-survey-result-protocols';
 
-import { mockLoadSurveyResultRepository, mockLoadSurveyByIdRepository } from '../mocks';
+import { LoadSurveyByIdRepositorySpy, mockLoadSurveyResultRepository } from '../mocks';
 import { throwError, mockSurveyResultModel, mockSurveyModel } from '@/domain/test';
 import MockDate from 'mockdate';
 
 type SutTypes = {
   sut: DbLoadSurveyResult;
   loadSurveyResultRepositoryStub: LoadSurveyResultRepository;
-  loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository;
+  loadSurveyByIdRepositorySpy: LoadSurveyByIdRepositorySpy;
 };
-
-const surveyModel = mockSurveyModel();
 
 const mockSut = (): SutTypes => {
   const loadSurveyResultRepositoryStub = mockLoadSurveyResultRepository();
-  const loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository(surveyModel);
-  const sut = new DbLoadSurveyResult(
-    loadSurveyResultRepositoryStub,
-    loadSurveyByIdRepositoryStub
-  );
+  const loadSurveyByIdRepositorySpy = new LoadSurveyByIdRepositorySpy();
+  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy);
 
   return {
     sut,
     loadSurveyResultRepositoryStub,
-    loadSurveyByIdRepositoryStub,
+    loadSurveyByIdRepositorySpy,
   };
 };
 
@@ -45,27 +40,21 @@ describe('DbLoadSurveyResult UseCase', () => {
 
   test('Should call LoadSuveyResultRepository with correct value', async () => {
     const { sut, loadSurveyResultRepositoryStub } = mockSut();
-    const loadBySurveyIdSpy = jest.spyOn(
-      loadSurveyResultRepositoryStub,
-      'loadBySurveyId'
-    );
+    const loadBySurveyIdSpy = jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId');
     await sut.load('any_survey_id');
     expect(loadBySurveyIdSpy).toHaveBeenCalledWith('any_survey_id');
   });
 
   test('Should throw if LoadSurveyResultRepository throws', async () => {
     const { sut, loadSurveyResultRepositoryStub } = mockSut();
-    jest
-      .spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
-      .mockImplementationOnce(throwError);
+    jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockImplementationOnce(throwError);
     const promise = sut.load('any_survey_id');
     await expect(promise).rejects.toThrow();
   });
 
   test('Should call LoadSurveyByIdRepository if LoadSurveyResultRepository returns null', async () => {
-    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub } =
-      mockSut();
-    const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById');
+    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy } = mockSut();
+    const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositorySpy, 'loadById');
     jest
       .spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
       .mockReturnValueOnce(Promise.resolve(null));
@@ -74,23 +63,21 @@ describe('DbLoadSurveyResult UseCase', () => {
   });
 
   test('Should return surveyResultModel with all answers with count 0 if LoadSurveyByIdRepository returns null', async () => {
-    const { sut, loadSurveyResultRepositoryStub } = mockSut();
-    jest
-      .spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
-      .mockResolvedValueOnce(null);
+    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy } = mockSut();
+    jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockResolvedValueOnce(null);
     const surveyResult = await sut.load('any_survey_id');
 
     expect(surveyResult).toEqual({
-      surveyId: surveyModel.id,
-      question: surveyModel.question,
+      surveyId: loadSurveyByIdRepositorySpy.result.id,
+      question: loadSurveyByIdRepositorySpy.result.question,
       answers: [
         {
-          ...surveyModel.answers[0],
+          ...loadSurveyByIdRepositorySpy.result.answers[0],
           count: 0,
           percent: 0,
         },
         {
-          ...surveyModel.answers[1],
+          ...loadSurveyByIdRepositorySpy.result.answers[1],
           count: 0,
           percent: 0,
         },
