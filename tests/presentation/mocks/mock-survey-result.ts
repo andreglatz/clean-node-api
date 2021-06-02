@@ -1,26 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { SurveyResultModel } from '@/domain/models/survey-result';
 import { mockSurveyResultModel } from '@/domain/test';
 import { LoadSurveyResult } from '@/domain/usercases/survey-result/load-survey-result';
-import {
-  SaveSurveyResult,
-  SaveSurveyResultParams,
-} from '@/domain/usercases/survey-result/save-survey-result';
+import { SaveSurveyResult } from '@/domain/usercases/survey-result/save-survey-result';
 
-export const mockSaveSurveyResult = (): SaveSurveyResult => {
-  class SaveSurveyResultStub implements SaveSurveyResult {
-    async save(data: SaveSurveyResultParams): Promise<SurveyResultModel> {
-      return mockSurveyResultModel();
-    }
-  }
-  return new SaveSurveyResultStub();
-};
+export class SaveSurveyResultSpy implements SaveSurveyResult {
+  result = mockSurveyResultModel();
 
-export const mockLoadSurveyResult = (): LoadSurveyResult => {
-  class LoadSurveyResultStub implements LoadSurveyResult {
-    async load(surveyId: string): Promise<SurveyResultModel> {
-      return mockSurveyResultModel();
-    }
+  async save(data: SaveSurveyResult.Params): Promise<SaveSurveyResult.Result> {
+    return this.result;
   }
-  return new LoadSurveyResultStub();
-};
+}
+
+export class LoadSurveyResultSpy implements LoadSurveyResult {
+  result = mockSurveyResultModel();
+
+  async load(surveyId: string): Promise<LoadSurveyResult.Result> {
+    return this.result;
+  }
+}

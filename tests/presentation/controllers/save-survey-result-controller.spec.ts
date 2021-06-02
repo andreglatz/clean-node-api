@@ -5,7 +5,7 @@ import { SaveSurveyResultController } from '@/presentation/controllers';
 import { forbidden, serverError, ok } from '@/presentation/helpers/http/http-helper';
 import { InvalidParamError } from '@/presentation/errors';
 import { throwError, mockSurveyResultModel } from '@/domain/test';
-import { LoadAnsersBySurveySpy, mockSaveSurveyResult } from '../mocks';
+import { LoadAnsersBySurveySpy, SaveSurveyResultSpy } from '../mocks';
 import { Controller } from '../protocols';
 import { SaveSurveyResult } from '@/domain/usercases/survey-result/save-survey-result';
 
@@ -18,12 +18,12 @@ const mockRequest = (answer: string): SaveSurveyResultController.Request => ({
 type SutTypes = {
   sut: Controller;
   loadAnswersBySurveySpy: LoadAnsersBySurveySpy;
-  saveSurveyResultStub: SaveSurveyResult;
+  saveSurveyResultStub: SaveSurveyResultSpy;
 };
 
 const mockSut = (): SutTypes => {
   const loadAnswersBySurveySpy = new LoadAnsersBySurveySpy();
-  const saveSurveyResultStub = mockSaveSurveyResult();
+  const saveSurveyResultStub = new SaveSurveyResultSpy();
   const sut = new SaveSurveyResultController(loadAnswersBySurveySpy, saveSurveyResultStub);
 
   return {
@@ -104,8 +104,8 @@ describe('SaveSurveyResult Controller', () => {
   });
 
   test('Should return 200 on success', async () => {
-    const { sut, loadAnswersBySurveySpy } = mockSut();
+    const { sut, loadAnswersBySurveySpy, saveSurveyResultStub } = mockSut();
     const httpResponse = await sut.handle(mockRequest(loadAnswersBySurveySpy.result[0]));
-    expect(httpResponse).toEqual(ok(mockSurveyResultModel()));
+    expect(httpResponse).toEqual(ok(saveSurveyResultStub.result));
   });
 });

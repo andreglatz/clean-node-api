@@ -14,14 +14,14 @@ export class LoadSurveyResultController implements Controller {
 
   async handle(request: LoadSurveyResultController.Request): Promise<HttpResponse> {
     try {
-      const { surveyId } = request;
+      const { surveyId, accountId } = request;
       const survey = await this.loadSurveyById.checkById(surveyId);
 
       if (!survey) {
         return forbidden(new InvalidParamError('surveyId'));
       }
 
-      const surveyResult = await this.loadSurveyResult.load(surveyId);
+      const surveyResult = await this.loadSurveyResult.load(surveyId, accountId);
 
       return ok(surveyResult);
     } catch (error) {
@@ -33,5 +33,6 @@ export class LoadSurveyResultController implements Controller {
 export namespace LoadSurveyResultController {
   export type Request = {
     surveyId: string;
+    accountId: string;
   };
 }

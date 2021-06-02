@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AuthMiddleware } from '../../../src/presentation/middlewares/auth-middleware';
-import { LoadAccountByToken } from '../../../src/presentation/middlewares/auth-middleware-protocols';
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper';
 import { AccessDeniedError } from '@/presentation/errors';
 import { throwError } from '@/domain/test';

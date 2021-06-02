@@ -1,15 +1,21 @@
-/* eslint-disable no-useless-constructor */
-import { LoadSurveyResultRepository, SaveSurveyResult, SaveSurveyResultParams, SurveyResultModel, SaveSurveyResultRepository } from './db-save-survey-result-protocols'
+import {
+  LoadSurveyResultRepository,
+  SaveSurveyResult,
+  SaveSurveyResultRepository,
+} from './db-save-survey-result-protocols';
 
 export class DbSaveSurveyResult implements SaveSurveyResult {
-  constructor (
+  constructor(
     private readonly saveSurveyResultRepository: SaveSurveyResultRepository,
     private readonly loadSurveyResultRepository: LoadSurveyResultRepository
   ) {}
 
-  async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
-    await this.saveSurveyResultRepository.save(data)
-    const surveyResult = await this.loadSurveyResultRepository.loadBySurveyId(data.surveyId)
-    return surveyResult
+  async save(data: SaveSurveyResult.Params): Promise<SaveSurveyResult.Result> {
+    await this.saveSurveyResultRepository.save(data);
+
+    const { surveyId, accountId } = data;
+    const surveyResult = await this.loadSurveyResultRepository.loadBySurveyId(surveyId, accountId);
+
+    return surveyResult;
   }
 }

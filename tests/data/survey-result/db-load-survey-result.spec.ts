@@ -5,24 +5,24 @@ import {
   LoadSurveyByIdRepository,
 } from '@/data/usecases/survey-result/load-survey-result/db-load-survey-result-protocols';
 
-import { LoadSurveyByIdRepositorySpy, mockLoadSurveyResultRepository } from '../mocks';
+import { LoadSurveyByIdRepositorySpy, LoadSurveyResultRepositorySpy } from '../mocks';
 import { throwError, mockSurveyResultModel, mockSurveyModel } from '@/domain/test';
 import MockDate from 'mockdate';
 
 type SutTypes = {
   sut: DbLoadSurveyResult;
-  loadSurveyResultRepositoryStub: LoadSurveyResultRepository;
+  loadSurveyResultRepositorySpy: LoadSurveyResultRepositorySpy;
   loadSurveyByIdRepositorySpy: LoadSurveyByIdRepositorySpy;
 };
 
 const mockSut = (): SutTypes => {
-  const loadSurveyResultRepositoryStub = mockLoadSurveyResultRepository();
+  const loadSurveyResultRepositorySpy = new LoadSurveyResultRepositorySpy();
   const loadSurveyByIdRepositorySpy = new LoadSurveyByIdRepositorySpy();
-  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy);
+  const sut = new DbLoadSurveyResult(loadSurveyResultRepositorySpy, loadSurveyByIdRepositorySpy);
 
   return {
     sut,
-    loadSurveyResultRepositoryStub,
+    loadSurveyResultRepositorySpy,
     loadSurveyByIdRepositorySpy,
   };
 };
@@ -39,33 +39,34 @@ describe('DbLoadSurveyResult UseCase', () => {
   });
 
   test('Should call LoadSuveyResultRepository with correct value', async () => {
-    const { sut, loadSurveyResultRepositoryStub } = mockSut();
-    const loadBySurveyIdSpy = jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId');
-    await sut.load('any_survey_id');
-    expect(loadBySurveyIdSpy).toHaveBeenCalledWith('any_survey_id');
+    const { sut, loadSurveyResultRepositorySpy } = mockSut();
+    const loadBySurveyIdSpy = jest.spyOn(loadSurveyResultRepositorySpy, 'loadBySurveyId');
+    await sut.load('any_survey_id', 'any_account_id');
+
+    expect(loadBySurveyIdSpy).toHaveBeenCalledWith('any_survey_id', 'any_account_id');
   });
 
   test('Should throw if LoadSurveyResultRepository throws', async () => {
-    const { sut, loadSurveyResultRepositoryStub } = mockSut();
-    jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockImplementationOnce(throwError);
-    const promise = sut.load('any_survey_id');
+    const { sut, loadSurveyResultRepositorySpy } = mockSut();
+    jest.spyOn(loadSurveyResultRepositorySpy, 'loadBySurveyId').mockImplementationOnce(throwError);
+    const promise = sut.load('any_survey_id', 'any_account_id');
     await expect(promise).rejects.toThrow();
   });
 
   test('Should call LoadSurveyByIdRepository if LoadSurveyResultRepository returns null', async () => {
-    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy } = mockSut();
+    const { sut, loadSurveyResultRepositorySpy, loadSurveyByIdRepositorySpy } = mockSut();
     const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositorySpy, 'loadById');
     jest
-      .spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
+      .spyOn(loadSurveyResultRepositorySpy, 'loadBySurveyId')
       .mockReturnValueOnce(Promise.resolve(null));
-    await sut.load('any_survey_id');
+    await sut.load('any_survey_id', 'any_account_id');
     expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id');
   });
 
   test('Should return surveyResultModel with all answers with count 0 if LoadSurveyByIdRepository returns null', async () => {
-    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy } = mockSut();
-    jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockResolvedValueOnce(null);
-    const surveyResult = await sut.load('any_survey_id');
+    const { sut, loadSurveyResultRepositorySpy, loadSurveyByIdRepositorySpy } = mockSut();
+    jest.spyOn(loadSurveyResultRepositorySpy, 'loadBySurveyId').mockResolvedValueOnce(null);
+    const surveyResult = await sut.load('any_survey_id', 'any_account_id');
 
     expect(surveyResult).toEqual({
       surveyId: loadSurveyByIdRepositorySpy.result.id,
@@ -87,8 +88,8 @@ describe('DbLoadSurveyResult UseCase', () => {
   });
 
   test('Should return surveyResultModel on success', async () => {
-    const { sut } = mockSut();
-    const surveyResult = await sut.load('any_survey_id');
-    expect(surveyResult).toEqual(mockSurveyResultModel());
+    const { sut, loadSurveyResultRepositorySpy } = mockSut();
+    const surveyResult = await sut.load('any_survey_id', 'any_account_id');
+    expect(surveyResult).toEqual(loadSurveyResultRepositorySpy.result);
   });
 });
