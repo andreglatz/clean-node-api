@@ -1,19 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2020",                          
-    "module": "commonjs",                     
-    "sourceMap": true,                        
-    "outDir": "./dist",                       
+    "target": "es2020",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "./dist",
     "rootDirs": ["src", "tests"],
-    "baseUrl": "src",                       
+    "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
-    },                           
-    "esModuleInterop": true,                  
-    "forceConsistentCasingInFileNames": true  
+    },
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "src", "tests"
-  ],
+  "include": ["src", "tests"],
   "exclude": []
 }

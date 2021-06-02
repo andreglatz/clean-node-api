@@ -97,6 +97,33 @@ describe('Account Mongo Repository', () => {
       expect(survey).toBeTruthy();
       expect(survey.id).toBeTruthy();
     });
+
+    test('Should return null if survey does not exists', async () => {
+      const sut = mockSut();
+      const survey = await sut.loadById(new ObjectID().toHexString());
+      expect(survey).toBeFalsy();
+    });
+  });
+
+  describe('loadAnswers()', () => {
+    test('Should load answers on success', async () => {
+      const sut = mockSut();
+
+      const surveyAdded = await surveyCollection.insertOne(mockAddSurveyParams());
+      const survey = surveyAdded.ops[0];
+
+      const answers = await sut.loadAnswers(survey._id);
+
+      expect(answers).toEqual([survey.answers[0].answer, survey.answers[1].answer]);
+    });
+
+    test('Should return empty array if survey does not exists', async () => {
+      const sut = mockSut();
+
+      const answers = await sut.loadAnswers(new ObjectID().toHexString());
+
+      expect(answers).toEqual([]);
+    });
   });
 
   describe('checkById()', () => {
