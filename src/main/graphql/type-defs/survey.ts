@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-core';
 
 export default gql`
   extend type Query {
-    surveys: [Survey!]!
+    surveys: [Survey!]! @auth
   }
 
   type Survey {
