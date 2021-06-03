@@ -21,6 +21,19 @@ type SurveyResultQuery = {
   };
 };
 
+type SaveSurveyResultMutation = {
+  saveSurveyResult: {
+    question: string;
+    answers: {
+      answer: string;
+      count: number;
+      percent: number;
+      isCurrentAccountAnswer: boolean;
+    }[];
+    date: Date;
+  };
+};
+
 describe('Survey GraphQL', () => {
   let accountCollection: Collection;
   let surveyCollection: Collection;
@@ -132,6 +145,71 @@ describe('Survey GraphQL', () => {
 
       expect(response.data).toBeNull();
       expect(response.errors[0].message).toBe('Access denied');
+    });
+  });
+
+  describe('Save Sruvey Result Mutation', () => {
+    let saveSurveyResultMutation: DocumentNode;
+
+    beforeAll(() => {
+      saveSurveyResultMutation = gql`
+        mutation saveSurveyResult($surveyId: String!, $answer: String!) {
+          saveSurveyResult(surveyId: $surveyId, answer: $answer) {
+            question
+            answers {
+              answer
+              count
+              percent
+              isCurrentAccountAnswer
+            }
+            date
+          }
+        }
+      `;
+    });
+
+    it('Should return Survey Result', async () => {
+      const survey = {
+        question: faker.random.word(),
+        answers: [
+          {
+            answer: faker.random.word(),
+            image: faker.image.imageUrl(),
+          },
+        ],
+        date: new Date(),
+      };
+
+      const surveyId = (await surveyCollection.insertOne(survey)).ops[0]._id.toString();
+
+      const accessToken = await mockAccessToken(accountCollection);
+
+      const { query } = createTestClient({
+        apolloServer,
+        extendMockRequest: {
+          headers: {
+            'x-access-token': accessToken,
+          },
+        },
+      });
+
+      const response = await query<SaveSurveyResultMutation>(saveSurveyResultMutation, {
+        variables: {
+          surveyId,
+          answer: survey.answers[0].answer,
+        },
+      });
+
+      expect(response.data.saveSurveyResult.date).toEqual(survey.date.toISOString());
+      expect(response.data.saveSurveyResult.question).toBe(survey.question);
+      expect(response.data.saveSurveyResult.answers).toEqual([
+        {
+          answer: survey.answers[0].answer,
+          count: 1,
+          percent: 100,
+          isCurrentAccountAnswer: true,
+        },
+      ]);
     });
   });
 });
