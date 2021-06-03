@@ -76,7 +76,7 @@ describe('Survey GraphQL', () => {
         date: new Date(),
       };
 
-      surveyCollection.insertOne(survey);
+      await surveyCollection.insertOne(survey);
 
       const accessToken = await mockAccessToken(accountCollection);
 
@@ -97,6 +97,28 @@ describe('Survey GraphQL', () => {
       expect(response.data.surveys[0].date).toEqual(survey.date.toISOString());
       expect(response.data.surveys[0].question).toBe(survey.question);
       expect(response.data.surveys[0].didAnswer).toBe(false);
+    });
+
+    it('Should return AccessDeniedError if no token is provided', async () => {
+      const survey = {
+        question: faker.random.word(),
+        answers: [
+          {
+            answer: faker.random.word(),
+            image: faker.image.imageUrl(),
+          },
+        ],
+        date: new Date(),
+      };
+
+      await surveyCollection.insertOne(survey);
+
+      const { query } = createTestClient({ apolloServer });
+
+      const response = await query<SurveysQuery>(surveysQuery);
+
+      expect(response.data).toBeNull();
+      expect(response.errors[0].message).toBe('Access denied');
     });
   });
 });
