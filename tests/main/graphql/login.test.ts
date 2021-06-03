@@ -9,14 +9,14 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers';
 import { makeApolloServer } from './helper';
 import { DocumentNode } from 'apollo-link';
 
-type LoginQueryType = {
+type LoginQuery = {
   login: {
     accessToken: string;
     name: string;
   };
 };
 
-type SignupMutationType = {
+type SignupMutation = {
   signup: {
     accessToken: string;
     name: string;
@@ -69,7 +69,7 @@ describe('Login GraphQL', () => {
 
       const { query } = createTestClient({ apolloServer });
 
-      const response = await query<LoginQueryType>(loginQuery, {
+      const response = await query<LoginQuery>(loginQuery, {
         variables: { email: account.email, password },
       });
 
@@ -82,7 +82,7 @@ describe('Login GraphQL', () => {
       const email = faker.internet.email();
       const password = faker.internet.password();
 
-      const response = await query<LoginQueryType>(loginQuery, { variables: { email, password } });
+      const response = await query<LoginQuery>(loginQuery, { variables: { email, password } });
 
       expect(response.data).toBeNull();
       expect(response.errors[0].message).toBe('Unauthorized');
@@ -124,10 +124,31 @@ describe('Login GraphQL', () => {
         passwordConfirmation: password,
       };
 
-      const response = await mutate<SignupMutationType>(signupMutation, { variables: account });
+      const response = await mutate<SignupMutation>(signupMutation, { variables: account });
 
       expect(response.data.signup.accessToken).toBeTruthy();
       expect(response.data.signup.name).toBe(account.name);
+    });
+
+    it('Should return EmailInUseError on invalid data', async () => {
+      const password = faker.internet.password();
+      const hashedPassword = await hash(password, 12);
+
+      const account = {
+        name: faker.name.findName(),
+        email: faker.internet.email(),
+        password: hashedPassword,
+      };
+
+      await accountCollection.insertOne(account);
+
+      const { mutate } = createTestClient({ apolloServer });
+
+      const response = await mutate<SignupMutation>(signupMutation, {
+        variables: { ...account, password, passwordConfirmation: password },
+      });
+
+      expect(response.errors[0].message).toBe('The received email is already in use');
     });
   });
 });
