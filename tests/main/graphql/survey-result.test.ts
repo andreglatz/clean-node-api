@@ -184,7 +184,7 @@ describe('Survey GraphQL', () => {
 
       const accessToken = await mockAccessToken(accountCollection);
 
-      const { query } = createTestClient({
+      const { mutate } = createTestClient({
         apolloServer,
         extendMockRequest: {
           headers: {
@@ -193,7 +193,7 @@ describe('Survey GraphQL', () => {
         },
       });
 
-      const response = await query<SaveSurveyResultMutation>(saveSurveyResultMutation, {
+      const response = await mutate<SaveSurveyResultMutation>(saveSurveyResultMutation, {
         variables: {
           surveyId,
           answer: survey.answers[0].answer,
@@ -210,6 +210,33 @@ describe('Survey GraphQL', () => {
           isCurrentAccountAnswer: true,
         },
       ]);
+    });
+
+    it('Should return AccessDeniedError if no token is provided', async () => {
+      const survey = {
+        question: faker.random.word(),
+        answers: [
+          {
+            answer: faker.random.word(),
+            image: faker.image.imageUrl(),
+          },
+        ],
+        date: new Date(),
+      };
+
+      const surveyId = (await surveyCollection.insertOne(survey)).ops[0]._id.toString();
+
+      const { mutate } = createTestClient({ apolloServer });
+
+      const response = await mutate<SaveSurveyResultMutation>(saveSurveyResultMutation, {
+        variables: {
+          surveyId,
+          answer: survey.answers[0].answer,
+        },
+      });
+
+      expect(response.data).toBeNull();
+      expect(response.errors[0].message).toBe('Access denied');
     });
   });
 });
