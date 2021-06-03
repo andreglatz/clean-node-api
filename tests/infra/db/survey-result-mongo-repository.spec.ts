@@ -148,7 +148,7 @@ describe('Account Mongo Repository', () => {
         },
       ]);
 
-      const surveyResult = await sut.loadBySurveyId(survey.id);
+      const surveyResult = await sut.loadBySurveyId(survey.id, account.id);
 
       expect(surveyResult).toBeTruthy();
       expect(surveyResult.surveyId).toEqual(survey.id);
@@ -162,8 +162,10 @@ describe('Account Mongo Repository', () => {
 
     test('Should return null if there is no survey result', async () => {
       const survey = await mockSurvey();
+      const account = await mockAccount();
+
       const sut = mockSut();
-      const surveyResult = await sut.loadBySurveyId(survey.id);
+      const surveyResult = await sut.loadBySurveyId(survey.id, account.id);
       expect(surveyResult).toBeNull();
     });
   });

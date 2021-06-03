@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DbLoadSurveyResult } from '@/data/usecases/survey-result/load-survey-result/db-load-survey-result';
-import {
-  LoadSurveyResultRepository,
-  LoadSurveyByIdRepository,
-} from '@/data/usecases/survey-result/load-survey-result/db-load-survey-result-protocols';
-
 import { LoadSurveyByIdRepositorySpy, LoadSurveyResultRepositorySpy } from '../mocks';
-import { throwError, mockSurveyResultModel, mockSurveyModel } from '@/domain/test';
+import { throwError } from '@/domain/test';
 import MockDate from 'mockdate';
 
 type SutTypes = {
@@ -76,11 +71,13 @@ describe('DbLoadSurveyResult UseCase', () => {
           ...loadSurveyByIdRepositorySpy.result.answers[0],
           count: 0,
           percent: 0,
+          isCurrentAccountAnswer: false,
         },
         {
           ...loadSurveyByIdRepositorySpy.result.answers[1],
           count: 0,
           percent: 0,
+          isCurrentAccountAnswer: false,
         },
       ],
       date,
