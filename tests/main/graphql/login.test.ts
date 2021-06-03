@@ -16,6 +16,13 @@ type LoginQueryType = {
   };
 };
 
+type SignupMutationType = {
+  signup: {
+    accessToken: string;
+    name: string;
+  };
+};
+
 describe('Login GraphQL', () => {
   let accountCollection: Collection;
   let apolloServer: ApolloServer;
@@ -79,6 +86,48 @@ describe('Login GraphQL', () => {
 
       expect(response.data).toBeNull();
       expect(response.errors[0].message).toBe('Unauthorized');
+    });
+  });
+
+  describe('Signup Mutation', () => {
+    let signupMutation: DocumentNode;
+
+    beforeAll(() => {
+      signupMutation = gql`
+        mutation signup(
+          $email: String!
+          $name: String!
+          $password: String!
+          $passwordConfirmation: String!
+        ) {
+          signup(
+            email: $email
+            name: $name
+            password: $password
+            passwordConfirmation: $passwordConfirmation
+          ) {
+            accessToken
+            name
+          }
+        }
+      `;
+    });
+
+    it('Should return an Account on valid data', async () => {
+      const { mutate } = createTestClient({ apolloServer });
+
+      const password = faker.internet.password();
+      const account = {
+        email: faker.internet.email(),
+        name: faker.name.findName(),
+        password,
+        passwordConfirmation: password,
+      };
+
+      const response = await mutate<SignupMutationType>(signupMutation, { variables: account });
+
+      expect(response.data.signup.accessToken).toBeTruthy();
+      expect(response.data.signup.name).toBe(account.name);
     });
   });
 });
